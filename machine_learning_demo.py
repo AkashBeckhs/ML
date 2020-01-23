@@ -16,9 +16,10 @@ from sklearn.svm import SVC
 
 def main():
 	# Load dataset
-	url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
+	#url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
 	names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
-	dataset = pd.read_csv(url, names=names)
+	dataset = pd.read_csv('iris.csv', names=names)
+
 	arr=dataset.values
 	arr=np.array(arr)
     
@@ -29,16 +30,19 @@ def main():
 
 	# box and whisker plots
 	dataset.plot(kind='box', subplots=True, layout=(2,2), sharex=False, sharey=False)
-	plt.show()
+	#plt.show()
 
 	#printing histogram
-	dataset.hist()
-	plt.show()
+	#dataset.hist()
+	#plt.show()
 
 
 	# Split-out validation dataset
 	X = arr[:,0:4]
 	Y = arr[:,4]
+	
+
+	"""
 	validation_size = 0.20
 	seed = 7
 	scoring = 'accuracy'
@@ -77,10 +81,14 @@ def main():
 	knn = KNeighborsClassifier()
 	knn.fit(X_train, Y_train)
 	predictions = knn.predict(X_validation)
+	print('-----accuracy----')
 	print(accuracy_score(Y_validation, predictions))
+	print('-----confusion matrix----')
 	print(confusion_matrix(Y_validation, predictions))
+	print('-----classification report----')
 	print(classification_report(Y_validation, predictions))	
 
-
+"""
 if __name__ == '__main__':
 	main()
+
