@@ -42,11 +42,27 @@ y=df.salary
   
 """
 
+#aggregating native-country in two parts united-states and others
+
+#print(x['native_country'].value_counts())
+x['native_country'] =['United-States' if 'United-States' in x else 'Others' for x in x['native_country']]
+#print(x['native_country'].value_counts())
 
 
+toDummyList=['age','workclass','fnlwgt','education','education_num','marital_status','occupation','relationship','race','sex','capital_gain','capital_loss','hours_per_week','native_country']
+
+def dummyDf(df,toDummyList):
+  for x in toDummyList:
+    print('for '+x)
+    dummies=pd.get_dummies(df[x],prefix=x,dummy_na=False,sparse=True)
+    df.drop(x,1)
+    df=pd.concat([df,dummies],axis=1)
+  return df
 
 
+x=dummyDf(x,toDummyList)
 
+print(x.head(5))
 
 
 
