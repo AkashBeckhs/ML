@@ -45,17 +45,20 @@ y=df.salary
 #aggregating native-country in two parts united-states and others
 
 #print(x['native_country'].value_counts())
-x['native_country'] =['United-States' if 'United-States' in x else 'Others' for x in x['native_country']]
+x['native_country'] =['United-States' if x=='United-States' else 'Others' for x in x['native_country']]
 #print(x['native_country'].value_counts())
 
+x.replace('NaN',np.NaN)
 
-toDummyList=['age','workclass','fnlwgt','education','education_num','marital_status','occupation','relationship','race','sex','capital_gain','capital_loss','hours_per_week','native_country']
+
+
+toDummyList=['age','workclass','education','education_num','marital_status','occupation','relationship','race','sex','capital_gain','capital_loss','hours_per_week','native_country']
 
 def dummyDf(df,toDummyList):
   for x in toDummyList:
     print('for '+x)
-    dummies=pd.get_dummies(df[x],prefix=x,dummy_na=False,sparse=True)
-    df.drop(x,1)
+    dummies=pd.get_dummies(df[x],prefix=x,dummy_na=False)
+    df=df.drop(x,1)
     df=pd.concat([df,dummies],axis=1)
   return df
 
@@ -63,6 +66,43 @@ def dummyDf(df,toDummyList):
 x=dummyDf(x,toDummyList)
 
 print(x.head(5))
+
+#Handling missing values
+
+print(x.isna().sum().sort_values(ascending=False).head())
+
+imp =SimpleImputer(strategy='mean',missing_values=np.NaN)
+imp.fit(x)
+x=pd.DataFrame(data=imp.transform(x),columns=x.columns)
+
+
+print(x.isna().sum().sort_values(ascending=False).head())
+# Detecting outliers using Turkey IQR
+
+"""
+Turkey IQR
+  Detects Outliers
+  Outliers are defined as Q1-1.5(Q3-Q1) or above Q3+1.5(Q3-Q1) Where Q1 and Q3 are quartile 1 and 3
+
+Standart deviation from mean is another approach to detect extreme values.
+
+"""
+
+def findOutliersUsingTurkey(x):
+  q1=np.percentile(x,25)
+  q2=np.percentile(x,75)
+  iqr=q3-q1
+  floor=q1-1.5*(iqr)
+  ceiling=q3+1.5*(iqr)
+  outlierIndices=list(x.index[(x<floor)|(x>ceiling)])
+  outlierValues=list(x[outlierIndices])
+  return outlierIndices,outlierValues
+
+
+turkeyIndices,turkeyValues=findOutliersUsingTurkey(x['age'])
+print(np.sort(turkeyValues))
+
+
 
 
 
