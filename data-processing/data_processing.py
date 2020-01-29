@@ -187,7 +187,7 @@ print(XPca.head(5))
 xTrain,Xtest,yTrain,yTest=model_selection.train_test_split(x,y,train_size=0.70,random_state=1)
 
 #selecting features 
-select =sklearn.feature_selection.SelectKBest(k=20)
+select =sklearn.feature_selection.SelectKBest(k=50)
 selectFeatures =select.fit(xTrain,yTrain)
 indicesSelected=selectFeatures.get_support(indices=True)
 columnNamesSelected = [x.columns[i] for i in indicesSelected]
